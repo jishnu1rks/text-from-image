@@ -2,18 +2,19 @@ import { useState } from "react";
 import Tesseract from "tesseract.js";
 
 const UploadAndExtract = () => {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
   const [text, setText] = useState("")
 
-  const onFileUpload = (e) => {
-    const fileUrl = URL.createObjectURL(e.target.files[0])
-    if(fileUrl) {
-        setImage(fileUrl);
-        extractFile(fileUrl)
+  const onFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setImage(fileUrl);
+      extractFile(fileUrl);
     }
   };
 
-  const extractFile = async (imageFile: unknown) => {
+  const extractFile = async (imageFile: string) => {
     try {
         const result = await Tesseract.recognize(
             imageFile,
